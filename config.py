@@ -4,8 +4,8 @@
 DEBUG = True
 
 ## Configuração para interação com banco de dados
-USERNAME = 'Marlon Melo'
-PASSWORD = 'supersonicbeatle23${{41'
+USERNAME = ''
+PASSWORD = ''
 
 # Utilização do servidor local
 SERVER = 'localhost'
