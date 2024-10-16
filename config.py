@@ -4,11 +4,13 @@
 DEBUG = True
 
 ## Configuração para interação com banco de dados
-USERNAME = ''
-PASSWORD = ''
+USERNAME = 'Marlon Melo'
+PASSWORD = 'supersonicbeatle23${{41'
 
 # Utilização do servidor local
 SERVER = 'localhost'
+
+SECRET_KEY = 'aplicacao_flask'
 
 # Nome do banco de dados criado para a aplicação
 DB = 'api_flask'

@@ -26,12 +26,15 @@ from ..models.professor_model import Professor
 #importando a Api
 from api import api
 
+from flask_jwt_extended import jwt_required
+
 # Classe que herda o recurso importado anteriormente
 class ProfessorList(Resource):
+    @jwt_required()
     def get(self):
         ps = professor_schema.ProfessorSchema(many=True)
         return paginate(Professor, ps)
-
+    @jwt_required()
     def post(self):
         ps = professor_schema.ProfessorSchema()
         validate = ps.validate(request.json)
@@ -46,6 +49,7 @@ class ProfessorList(Resource):
             return make_response(jsonifyresultado, 201)
 
 class ProfessorDetail(Resource):
+    @jwt_required()
     def get(self, id):
         professores = professor_service.listar_professor_id(id)
         if professores is None:
@@ -53,7 +57,7 @@ class ProfessorDetail(Resource):
         else:
             ps = professor_schema.ProfessorSchema()
             return make_response(ps.jsonify(professores), 200)
-
+    @jwt_required()
     def put(self, id):
         professor_bd = professor_service.listar_professor_id(id)
         if professor_bd is None:
@@ -70,7 +74,7 @@ class ProfessorDetail(Resource):
                 professor_service.editar_professor(professor_bd, novo_professor)
                 professor_atualizado = professor_service.listar_professor_id(id)
                 return make_response(ps.jsonify(professor_atualizado), 200)
-
+    @jwt_required()
     def delete(self, id):
         professor = professor_service.listar_professor_id(id)
         if professor is None:

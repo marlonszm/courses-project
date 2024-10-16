@@ -26,11 +26,16 @@ from ..models.formacao_model import Formacao
 #importando a Api
 from api import api
 
+from flask_jwt_extended import jwt_required
+
 # Classe que herda o recurso importado anteriormente
 class FormacaoList(Resource):
+    @jwt_required()
     def get(self):
         fs = formacao_schema.FormacaoSchema(many=True)
         return paginate(Formacao, fs)
+
+    @jwt_required()
     def post(self):
         fs = formacao_schema.FormacaoSchema()
         validate = fs.validate(request.json)
@@ -42,10 +47,10 @@ class FormacaoList(Resource):
             professores = request.json['professores']
             nova_formacao = formacao.Formacao(nome = nome, descricao = descricao, professores = professores)
             resultado = formacao_service.cadastrar_formacao(nova_formacao)
-            jsonifyresultado = fs.jsonify(resultado)
-            return make_response(jsonifyresultado, 201)
+            return make_response(fs.jsonify(resultado), 201)
 
 class FormacaoDetail(Resource):
+    @jwt_required()
     def get(self, id):
         formacao = formacao_service.listar_formacao_id(id)
         if formacao is None:
@@ -54,6 +59,7 @@ class FormacaoDetail(Resource):
             fs = formacao_schema.FormacaoSchema()
             return make_response(fs.jsonify(formacao), 200)
 
+    @jwt_required()
     def put(self, id):
         formacao_bd = formacao_service.listar_formacao_id(id)
         if formacao_bd is None:
@@ -72,6 +78,7 @@ class FormacaoDetail(Resource):
                 formacao_atualizado = formacao_service.listar_formacao_id(id)
                 return make_response(fs.jsonify(formacao_atualizado), 200)
 
+    @jwt_required()
     def delete(self, id):
         formacao = formacao_service.listar_formacao_id(id)
         if formacao is None:

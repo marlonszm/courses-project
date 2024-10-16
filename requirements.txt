@@ -19,6 +19,7 @@ cryptography==43.0.0
 cycler==0.12.1
 et-xmlfile==1.1.0
 Flask==3.0.3
+Flask-JWT-Extended==4.6.0
 Flask-Login==0.6.3
 flask-marshmallow==1.2.1
 Flask-Migrate==4.0.7
@@ -45,12 +46,14 @@ numpy==2.0.2
 openpyxl==3.1.5
 packaging==24.1
 pandas==2.2.2
+passlib==1.7.4
 patsy==0.5.6
 pillow==10.4.0
 protobuf==4.25.4
 pycparser==2.22
 pycryptodomex==3.20.0
 pygame==2.6.0
+PyJWT==2.9.0
 PyMySQL==1.1.1
 pyparsing==3.1.4
 pyseto==1.7.9
