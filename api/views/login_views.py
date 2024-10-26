@@ -22,14 +22,25 @@ from ..models.usuario_model import Usuario
 
 
 # Importações do token de acesso JWT
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from datetime import timedelta
 
 #importando a Api
-from api import api
+from api import api, jwt
 
 # Classe que herda o recurso importado anteriormente
 class LoginList(Resource):
+
+    @jwt.additional_claims_loader
+    def add_claims_to_access_token(identity):
+        usuario_token = usuario_service.listar_usuario_id(identity)
+        if usuario_token.is_admin:
+            roles = 'admin'
+        else:
+            roles = 'user'
+
+        return {'roles': roles}
+
     def post(self):
         ls = login_schema.LoginSchema()
         validate = ls.validate(request.json)
@@ -44,13 +55,17 @@ class LoginList(Resource):
                     identity=usuario_bd.id,
                     expires_delta=timedelta(seconds=100)
                 )
+                refresh_token = create_refresh_token(
+                    identity=usuario_bd.id,
+                )
                 return make_response(jsonify({
                     "access_token": access_token,
+                    "refresh_token": refresh_token,
                     "message": "Login realizado com sucesso"
                 }), 200)
             else:
                 return make_response(jsonify({
                     'message': "As credencias estão inválidas"
-                }), 200)
+                }), 401)
 # Recurso que vem da classe CursoList, com a rota /cursos
 api.add_resource(LoginList, '/login')

@@ -23,6 +23,8 @@ from ..models.usuario_model import Usuario
 #importando a Api
 from api import api
 
+import uuid
+
 # Classe que herda o recurso importado anteriormente
 class UsuarioList(Resource):
     def post(self):
@@ -34,7 +36,9 @@ class UsuarioList(Resource):
             nome = request.json['nome']
             email = request.json['email']
             senha = request.json['senha']
-            novo_usuario = usuario.Usuario(nome= nome, email=email, senha= senha)
+            is_admin = request.json['is_admin']
+            api_key = str(uuid.uuid4())
+            novo_usuario = usuario.Usuario(nome= nome, email=email, senha= senha, is_admin=is_admin, api_key=api_key)
             resultado = usuario_service.cadastrar_usuario(novo_usuario)
             jsonifyresultado = us.jsonify(resultado)
             return make_response(jsonifyresultado, 201)

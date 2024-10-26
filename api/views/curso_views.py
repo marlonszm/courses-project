@@ -27,16 +27,18 @@ from ..paginate import paginate
 from ..models.curso_model import Curso
 
 # Exigência de um token de acesso para utilização dos métodos
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
+
+from ..decorator import admin_required, api_key_required
 
 # Classe que herda o recurso importado anteriormente
 class CursoList(Resource):
     @jwt_required()
     def get(self):
         cs = curso_schema.CursoSchema(many=True)
-        return paginate(Curso, cs)
+        return paginate(Curso, cs), 200
 
-    @jwt_required()
+    @admin_required
     def post(self):
         cs = curso_schema.CursoSchema()
         validate = cs.validate(request.json)
@@ -66,7 +68,7 @@ class CursoDetail(Resource):
             cs = curso_schema.CursoSchema()
             return make_response(cs.jsonify(curso), 200)
 
-    @jwt_required()
+    @admin_required
     def put(self, id):
         curso_bd = curso_service.listar_curso_id(id)
         if curso_bd is None:
@@ -75,7 +77,7 @@ class CursoDetail(Resource):
             cs = curso_schema.CursoSchema()
             validate = cs.validate(request.json)
             if validate:
-                return make_response(jsonify(validate), 200)
+                return make_response(jsonify(validate), 400)
             else:
                 nome = request.json['nome']
                 descricao = request.json['descricao']
@@ -90,7 +92,7 @@ class CursoDetail(Resource):
                     curso_atualizado = curso_service.listar_curso_id(id)
                     return make_response(cs.jsonify(curso_atualizado), 200)
 
-    @jwt_required()
+    @admin_required
     def delete(self, id):
         curso = curso_service.listar_curso_id(id)
         if curso is None:
